@@ -1,6 +1,6 @@
-import type { components } from "./schema.d";
+import type { components } from "./schema";
 
-export * from "./schema.d";
+export * from "./schema";
 export * from "./helpers";
 
 // export common types

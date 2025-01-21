@@ -493,7 +493,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: operations["create-checkout-session"];
+        post: operations["handle-stripe-webhook"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3076,7 +3076,7 @@ export interface operations {
             };
         };
     };
-    "create-checkout-session": {
+    "handle-stripe-webhook": {
         parameters: {
             query?: never;
             header: {

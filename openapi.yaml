@@ -3046,7 +3046,7 @@ paths:
                 $ref: "#/components/schemas/InternalServerError"
   /handleStripeWebhook:
     post:
-      operationId: create-checkout-session
+      operationId: handle-stripe-webhook
       requestBody:
         content:
           application/json:

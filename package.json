@@ -16,7 +16,7 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
-    "openapi:gen": "openapi-typescript ./openapi.yaml -o ./src/openapi/schema.d.ts",
+    "openapi:gen": "openapi-typescript ./openapi.yaml -o ./src/openapi/schema.ts",
     "bump:patch": "npm version patch",
     "bump:minor": "npm version minor",
     "bump:major": "npm version major",
