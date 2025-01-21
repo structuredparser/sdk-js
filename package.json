@@ -1,0 +1,44 @@
+{
+  "name": "@structuredparser/sdk",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "The Structured Parser JS/TS SDK allows developers to easily integrate Structured Parser's advanced structured data extraction capabilities from unstructured documents such as PDF, DOCX, XLSX.",
+  "homepage": "https://structuredparser.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/structuredparser/sdk-js.git"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "prebuild": "rm -rf dist && vitest run",
+    "build": "tsc",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "openapi:gen": "openapi-typescript ./openapi.yaml -o ./src/openapi/schema.d.ts",
+    "bump:patch": "npm version patch",
+    "bump:minor": "npm version minor",
+    "bump:major": "npm version major",
+    "pub": "rm -rf dist && vitest run && tsc && npm publish --access public"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "openapi-fetch": "^0.13.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.7",
+    "@vitest/ui": "^3.0.2",
+    "openapi-typescript": "^7.5.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.10",
+    "vitest": "^3.0.2",
+    "rollup": "^4.31.0"
+  },
+  "files": [
+    "/dist"
+  ]
+}

@@ -1,0 +1,3143 @@
+openapi: 3.0.0
+info:
+  title: Structured Parser
+  description: Interface for structured data parsing using StructuredParser.com
+  version: 0.1.0
+components:
+  securitySchemes:
+    JWT:
+      type: apiKey
+      name: authorization
+      in: header
+    APIKey:
+      type: apiKey
+      name: x-api-key
+      in: header
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+        email:
+          type: string
+        avatar:
+          type: string
+      required:
+        - id
+        - displayName
+        - email
+      additionalProperties: false
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+      required:
+        - id
+        - name
+        - createdAt
+        - createdBy
+      additionalProperties: false
+    BasicUserInfo:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+        avatar:
+          type: string
+      required:
+        - id
+        - displayName
+      additionalProperties: false
+    Membership:
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        userId:
+          type: string
+        roleId:
+          type: string
+        startedAt:
+          type: string
+          format: date-time
+        endedAt:
+          type: string
+          format: date-time
+          nullable: true
+        endedBy:
+          type: string
+          nullable: true
+      required:
+        - id
+        - projectId
+        - userId
+        - roleId
+        - startedAt
+      additionalProperties: false
+    MembershipWithData:
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        userId:
+          type: string
+        roleId:
+          type: string
+        startedAt:
+          type: string
+          format: date-time
+        endedAt:
+          type: string
+          format: date-time
+          nullable: true
+        endedBy:
+          type: string
+          nullable: true
+        project:
+          $ref: "#/components/schemas/Project"
+        user:
+          $ref: "#/components/schemas/BasicUserInfo"
+        role:
+          $ref: "#/components/schemas/Role"
+      required:
+        - id
+        - projectId
+        - userId
+        - roleId
+        - startedAt
+        - project
+        - user
+        - role
+      additionalProperties: false
+    Self:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+        email:
+          type: string
+        avatar:
+          type: string
+        memberships:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              projectId:
+                type: string
+              userId:
+                type: string
+              roleId:
+                type: string
+              startedAt:
+                type: string
+                format: date-time
+              endedAt:
+                type: string
+                format: date-time
+                nullable: true
+              endedBy:
+                type: string
+                nullable: true
+              project:
+                $ref: "#/components/schemas/Project"
+              role:
+                $ref: "#/components/schemas/Role"
+            required:
+              - id
+              - projectId
+              - userId
+              - roleId
+              - startedAt
+              - project
+              - role
+            additionalProperties: false
+      required:
+        - id
+        - displayName
+        - email
+        - memberships
+      additionalProperties: false
+    LedgerTransaction:
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        currency:
+          type: string
+        amount:
+          type: number
+        timestamp:
+          type: string
+          format: date-time
+        description:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: {}
+        balance:
+          type: number
+      required:
+        - id
+        - projectId
+        - currency
+        - amount
+        - timestamp
+        - metadata
+      additionalProperties: false
+    APIKey:
+      type: object
+      properties:
+        id:
+          type: string
+          pattern: ^apk\_
+        projectId:
+          type: string
+          minLength: 1
+        membershipId:
+          type: string
+          minLength: 1
+        roleId:
+          type: string
+          minLength: 1
+        status:
+          type: string
+          enum:
+            - active
+            - inactive
+            - revoked
+        name:
+          type: string
+          minLength: 1
+        key:
+          type: string
+          minLength: 1
+        lastUsedAt:
+          type: string
+          format: date-time
+          nullable: true
+        updatedAt:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+      required:
+        - id
+        - projectId
+        - membershipId
+        - status
+        - name
+        - key
+        - lastUsedAt
+        - updatedAt
+        - updatedBy
+        - createdAt
+        - createdBy
+      additionalProperties: false
+    APIKeyWithData:
+      type: object
+      properties:
+        id:
+          type: string
+          pattern: ^apk\_
+        projectId:
+          type: string
+          minLength: 1
+        membershipId:
+          type: string
+          minLength: 1
+        roleId:
+          type: string
+          minLength: 1
+        status:
+          type: string
+          enum:
+            - active
+            - inactive
+            - revoked
+        name:
+          type: string
+          minLength: 1
+        key:
+          type: string
+          minLength: 1
+        lastUsedAt:
+          type: string
+          format: date-time
+          nullable: true
+        updatedAt:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        project:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+          required:
+            - id
+            - name
+          additionalProperties: false
+        membership:
+          $ref: "#/components/schemas/Membership"
+        user:
+          $ref: "#/components/schemas/BasicUserInfo"
+      required:
+        - id
+        - projectId
+        - membershipId
+        - status
+        - name
+        - key
+        - lastUsedAt
+        - updatedAt
+        - updatedBy
+        - createdAt
+        - createdBy
+        - project
+        - membership
+        - user
+      additionalProperties: false
+    WebhookConfiguration:
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 1
+        projectId:
+          type: string
+          minLength: 1
+        enabled:
+          type: boolean
+        method:
+          type: string
+          enum:
+            - POST
+            - PUT
+        url:
+          type: string
+          format: uri
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+        rules:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+      required:
+        - id
+        - projectId
+        - enabled
+        - method
+        - url
+        - updatedAt
+        - updatedBy
+        - createdAt
+        - createdBy
+      additionalProperties: false
+    Role:
+      type: object
+      properties:
+        projectId:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        permissions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Permission"
+      required:
+        - projectId
+        - id
+        - name
+        - permissions
+      additionalProperties: false
+    Permission:
+      type: string
+      enum:
+        - billing.manage
+        - documents.add
+        - documents.delete
+        - documents.download
+        - documents.read
+        - schemas.create
+        - schemas.update
+        - schemas.read
+        - schemas.delete
+        - parses.read
+        - parses.create
+        - memberships.manage
+        - memberships.read
+        - apikeys.manage
+        - apikeys.read
+        - webhooks.manage
+        - webhooks.read
+        - ledger.read
+    PlainRemoteDocumentDescriptor:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - plain
+        contentType:
+          type: string
+          minLength: 1
+        contents:
+          type: string
+      required:
+        - type
+        - contentType
+        - contents
+      additionalProperties: false
+    Base64RemoteDocumentDescriptor:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - base64
+        contentType:
+          type: string
+          minLength: 1
+        data:
+          type: string
+      required:
+        - type
+        - contentType
+        - data
+      additionalProperties: false
+    URLRemoteDocumentDescriptor:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - url
+        contentType:
+          type: string
+        url:
+          type: string
+          format: uri
+      required:
+        - type
+        - url
+      additionalProperties: false
+    RemoteDocumentDescriptor:
+      anyOf:
+        - $ref: "#/components/schemas/PlainRemoteDocumentDescriptor"
+        - $ref: "#/components/schemas/Base64RemoteDocumentDescriptor"
+        - $ref: "#/components/schemas/URLRemoteDocumentDescriptor"
+    Document:
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        preview:
+          type: string
+        contentType:
+          type: string
+        status:
+          type: string
+          enum:
+            - pending
+            - downloaded
+            - converted
+            - error
+        error:
+          type: string
+        bucket:
+          type: string
+        prefix:
+          type: string
+        remote:
+          $ref: "#/components/schemas/RemoteDocumentDescriptor"
+        representations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Representation"
+        updatedBy:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - projectId
+        - name
+        - description
+        - contentType
+        - status
+        - bucket
+        - prefix
+        - remote
+        - representations
+        - updatedBy
+        - updatedAt
+        - createdBy
+        - createdAt
+      additionalProperties: false
+    Representation:
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 1
+        kind:
+          type: string
+          enum:
+            - local
+            - downloaded
+            - converted
+            - output
+        status:
+          type: string
+          enum:
+            - pending
+            - ready
+            - error
+        error:
+          type: string
+          minLength: 1
+        contentType:
+          type: string
+        fileName:
+          type: string
+          minLength: 1
+        sizeInBytes:
+          type: number
+        pageCount:
+          type: number
+        metadata:
+          type: object
+          additionalProperties: {}
+        updatedBy:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - kind
+        - status
+        - contentType
+        - fileName
+        - metadata
+        - updatedBy
+        - updatedAt
+        - createdBy
+        - createdAt
+      additionalProperties: false
+    ProvidedSchema:
+      type: object
+      properties:
+        name:
+          type: string
+        jsonSchema: {}
+      required:
+        - jsonSchema
+      additionalProperties: false
+    SchemaRef:
+      type: object
+      properties:
+        id:
+          type: string
+        version:
+          type: number
+          minimum: 1
+      required:
+        - id
+        - version
+      additionalProperties: false
+    Parse:
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        documentId:
+          type: string
+        schemaRef:
+          $ref: "#/components/schemas/SchemaRef"
+        status:
+          type: string
+          enum:
+            - created
+            - parsing
+            - parsed
+            - error
+        error:
+          type: string
+          nullable: true
+        output:
+          nullable: true
+        updatedBy:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - projectId
+        - documentId
+        - schemaRef
+        - status
+        - updatedBy
+        - updatedAt
+        - createdBy
+        - createdAt
+      additionalProperties: false
+    ParseWithSchema:
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        documentId:
+          type: string
+        schemaRef:
+          $ref: "#/components/schemas/SchemaRef"
+        status:
+          type: string
+          enum:
+            - created
+            - parsing
+            - parsed
+            - error
+        error:
+          type: string
+          nullable: true
+        output:
+          nullable: true
+        updatedBy:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        schema:
+          $ref: "#/components/schemas/Schema"
+      required:
+        - id
+        - projectId
+        - documentId
+        - schemaRef
+        - status
+        - updatedBy
+        - updatedAt
+        - createdBy
+        - createdAt
+        - schema
+      additionalProperties: false
+    ParseWithDocumentAndSchema:
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        documentId:
+          type: string
+        schemaRef:
+          $ref: "#/components/schemas/SchemaRef"
+        status:
+          type: string
+          enum:
+            - created
+            - parsing
+            - parsed
+            - error
+        error:
+          type: string
+          nullable: true
+        output:
+          nullable: true
+        updatedBy:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        document:
+          $ref: "#/components/schemas/Document"
+        schema:
+          $ref: "#/components/schemas/Schema"
+      required:
+        - id
+        - projectId
+        - documentId
+        - schemaRef
+        - status
+        - updatedBy
+        - updatedAt
+        - createdBy
+        - createdAt
+        - document
+        - schema
+      additionalProperties: false
+    Schema:
+      type: object
+      properties:
+        id:
+          type: string
+        version:
+          type: integer
+          minimum: 1
+        projectId:
+          type: string
+        name:
+          type: string
+        hidden:
+          type: boolean
+        jsonSchema: {}
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+      required:
+        - id
+        - version
+        - projectId
+        - name
+        - jsonSchema
+        - createdAt
+        - createdBy
+      additionalProperties: false
+    GetSchemaResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        version:
+          type: integer
+          minimum: 1
+        projectId:
+          type: string
+        name:
+          type: string
+        hidden:
+          type: boolean
+        jsonSchema: {}
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        exampleOutput: {}
+      required:
+        - id
+        - version
+        - projectId
+        - name
+        - jsonSchema
+        - createdAt
+        - createdBy
+      additionalProperties: false
+    GetSchemaRequest:
+      type: object
+      properties:
+        actorId:
+          type: string
+        projectId:
+          type: string
+        schemaId:
+          type: string
+      required:
+        - actorId
+        - projectId
+        - schemaId
+      additionalProperties: false
+    ValidatorError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+            - 400
+        error:
+          type: string
+        message:
+          type: string
+        detail:
+          anyOf:
+            - {}
+            - type: array
+              items:
+                type: object
+                properties:
+                  instancePath:
+                    type: string
+                  keyword:
+                    type: string
+                  params:
+                    type: object
+                    additionalProperties: {}
+                  schemaPath:
+                    type: string
+                  message:
+                    type: string
+                required:
+                  - instancePath
+                  - keyword
+                  - params
+                  - schemaPath
+                  - message
+                additionalProperties: false
+      required:
+        - statusCode
+        - error
+        - message
+      additionalProperties: false
+    ForbiddenError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+            - 403
+        error:
+          type: string
+        message:
+          type: string
+        detail:
+          anyOf:
+            - {}
+            - type: object
+              properties:
+                projectId:
+                  type: string
+                userId:
+                  type: string
+                permission:
+                  type: string
+              required:
+                - projectId
+                - userId
+                - permission
+              additionalProperties: false
+            - type: object
+              properties:
+                apiKeyProjectId:
+                  type: string
+                targetProjectId:
+                  type: string
+              required:
+                - apiKeyProjectId
+                - targetProjectId
+              additionalProperties: false
+      required:
+        - statusCode
+        - error
+        - message
+      additionalProperties: false
+    NotFoundError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+            - 404
+        error:
+          type: string
+        message:
+          type: string
+        detail:
+          anyOf:
+            - {}
+            - type: object
+              properties:
+                resourceType:
+                  type: string
+                resourceId:
+                  type: string
+              required:
+                - resourceType
+                - resourceId
+              additionalProperties: false
+      required:
+        - statusCode
+        - error
+        - message
+      additionalProperties: false
+    UnauthorizedError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+            - 401
+        error:
+          type: string
+        message:
+          type: string
+        detail: {}
+      required:
+        - statusCode
+        - error
+        - message
+      additionalProperties: false
+    InternalServerError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          enum:
+            - 500
+        error:
+          type: string
+        message:
+          type: string
+        detail: {}
+      required:
+        - statusCode
+        - error
+        - message
+      additionalProperties: true
+paths:
+  /createAPIKey:
+    post:
+      operationId: create-apikey
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projectId:
+                  type: string
+                  minLength: 1
+                name:
+                  type: string
+                  minLength: 1
+                membershipId:
+                  type: string
+                  minLength: 1
+                roleId:
+                  type: string
+                  minLength: 1
+                enable:
+                  type: boolean
+                  default: true
+              required:
+                - projectId
+                - name
+                - membershipId
+              additionalProperties: false
+        required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIKeyWithData"
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /updateAPIKey:
+    patch:
+      operationId: update-apikey
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projectId:
+                  type: string
+                apikeyId:
+                  type: string
+                roleId:
+                  type: string
+                  minLength: 1
+                status:
+                  type: string
+                  enum:
+                    - active
+                    - inactive
+                    - revoked
+                name:
+                  type: string
+                  minLength: 1
+              required:
+                - projectId
+                - apikeyId
+              additionalProperties: false
+        required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIKeyWithData"
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /listAPIKeys:
+    get:
+      operationId: list-apikeys
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: userId
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: projectId
+          required: false
+        - schema:
+            type: array
+            items:
+              anyOf:
+                - type: string
+                  enum:
+                    - active
+                - type: string
+                  enum:
+                    - inactive
+                - type: string
+                  enum:
+                    - revoked
+          in: query
+          name: statuses
+          required: false
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/APIKeyWithData"
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /getAPIKey:
+    get:
+      operationId: get-apikey
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: projectId
+          required: true
+        - schema:
+            type: string
+          in: query
+          name: apikeyId
+          required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIKeyWithData"
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /listMemberships:
+    get:
+      operationId: list-memberships
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: projectId
+          required: false
+        - schema:
+            type: string
+          in: query
+          name: userId
+          required: false
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MembershipWithData"
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /downloadDocument:
+    get:
+      operationId: download-document
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: projectId
+          required: true
+        - schema:
+            type: string
+          in: query
+          name: documentId
+          required: true
+        - schema:
+            type: string
+            enum:
+              - downloaded
+              - converted
+              - output
+          in: query
+          name: kind
+          required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  downloadURL:
+                    type: string
+                    format: uri
+                required:
+                  - downloadURL
+                additionalProperties: false
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /listRoles:
+    get:
+      operationId: list-roles
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: projectId
+          required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Role"
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /createProject:
+    post:
+      operationId: create-project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+                - name
+              additionalProperties: false
+        required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /getSelf:
+    get:
+      operationId: get-self
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Self"
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /addDocument:
+    post:
+      operationId: add-document
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projectId:
+                  type: string
+                descriptor:
+                  $ref: "#/components/schemas/RemoteDocumentDescriptor"
+                parses:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      schema:
+                        anyOf:
+                          - type: object
+                            properties:
+                              id:
+                                type: string
+                              version:
+                                anyOf:
+                                  - type: string
+                                    enum:
+                                      - latest
+                                  - type: number
+                                    minimum: 1
+                            required:
+                              - id
+                              - version
+                            additionalProperties: false
+                          - $ref: "#/components/schemas/ProvidedSchema"
+                    required:
+                      - schema
+                    additionalProperties: false
+              required:
+                - projectId
+                - descriptor
+              additionalProperties: false
+        required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  projectId:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  preview:
+                    type: string
+                  contentType:
+                    type: string
+                  status:
+                    type: string
+                    enum:
+                      - pending
+                      - downloaded
+                      - converted
+                      - error
+                  error:
+                    type: string
+                  bucket:
+                    type: string
+                  prefix:
+                    type: string
+                  remote:
+                    $ref: "#/components/schemas/RemoteDocumentDescriptor"
+                  representations:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Representation"
+                  updatedBy:
+                    type: string
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  createdBy:
+                    type: string
+                  createdAt:
+                    type: string
+                    format: date-time
+                  parses:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ParseWithSchema"
+                required:
+                  - id
+                  - projectId
+                  - name
+                  - description
+                  - contentType
+                  - status
+                  - bucket
+                  - prefix
+                  - remote
+                  - representations
+                  - updatedBy
+                  - updatedAt
+                  - createdBy
+                  - createdAt
+                  - parses
+                additionalProperties: false
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /parseExistingDocument:
+    post:
+      operationId: parse-existing-document
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projectId:
+                  type: string
+                documentId:
+                  type: string
+                schema:
+                  anyOf:
+                    - type: object
+                      properties:
+                        id:
+                          type: string
+                        version:
+                          anyOf:
+                            - type: string
+                              enum:
+                                - latest
+                            - type: number
+                              minimum: 1
+                      required:
+                        - id
+                        - version
+                      additionalProperties: false
+                    - $ref: "#/components/schemas/ProvidedSchema"
+              required:
+                - projectId
+                - documentId
+                - schema
+              additionalProperties: false
+        required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ParseWithDocumentAndSchema"
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /listDocuments:
+    get:
+      operationId: list-documents
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: projectId
+          required: true
+        - schema:
+            type: number
+            default: 0
+          in: query
+          name: offset
+          required: false
+        - schema:
+            type: number
+            default: 20
+          in: query
+          name: limit
+          required: false
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Document"
+                  total:
+                    type: number
+                required:
+                  - items
+                  - total
+                additionalProperties: false
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /listParses:
+    get:
+      operationId: list-parses
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: projectId
+          required: true
+        - schema:
+            type: number
+            default: 0
+          in: query
+          name: offset
+          required: false
+        - schema:
+            type: number
+            default: 20
+          in: query
+          name: limit
+          required: false
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ParseWithDocumentAndSchema"
+                  total:
+                    type: number
+                required:
+                  - items
+                  - total
+                additionalProperties: false
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /getDocument:
+    get:
+      operationId: get-document
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: projectId
+          required: true
+        - schema:
+            type: string
+          in: query
+          name: documentId
+          required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  projectId:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  preview:
+                    type: string
+                  contentType:
+                    type: string
+                  status:
+                    type: string
+                    enum:
+                      - pending
+                      - downloaded
+                      - converted
+                      - error
+                  error:
+                    type: string
+                  bucket:
+                    type: string
+                  prefix:
+                    type: string
+                  remote:
+                    $ref: "#/components/schemas/RemoteDocumentDescriptor"
+                  representations:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Representation"
+                  updatedBy:
+                    type: string
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  createdBy:
+                    type: string
+                  createdAt:
+                    type: string
+                    format: date-time
+                  parses:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ParseWithSchema"
+                required:
+                  - id
+                  - projectId
+                  - name
+                  - description
+                  - contentType
+                  - status
+                  - bucket
+                  - prefix
+                  - remote
+                  - representations
+                  - updatedBy
+                  - updatedAt
+                  - createdBy
+                  - createdAt
+                  - parses
+                additionalProperties: false
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /getParse:
+    get:
+      operationId: get-parse
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: projectId
+          required: true
+        - schema:
+            type: string
+          in: query
+          name: parseId
+          required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ParseWithDocumentAndSchema"
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /listSchemas:
+    get:
+      operationId: list-schemas
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: projectId
+          required: true
+        - schema:
+            type: boolean
+          in: query
+          name: visible
+          required: false
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Schema"
+                  total:
+                    type: number
+                required:
+                  - items
+                  - total
+                additionalProperties: false
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /deleteSchema:
+    delete:
+      operationId: delete-schema
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: projectId
+          required: true
+        - schema:
+            type: string
+          in: query
+          name: schemaId
+          required: true
+        - schema:
+            type: number
+          in: query
+          name: version
+          required: false
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: boolean
+                required:
+                  - deleted
+                additionalProperties: false
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /getSchema:
+    get:
+      operationId: get-schema
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: projectId
+          required: true
+        - schema:
+            type: string
+          in: query
+          name: schemaId
+          required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetSchemaResponse"
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /updateSchema:
+    post:
+      operationId: update-schema
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projectId:
+                  type: string
+                schemaId:
+                  type: string
+                changeset:
+                  type: object
+                  properties:
+                    jsonSchema: {}
+                    name:
+                      type: string
+                    hidden:
+                      type: boolean
+                  additionalProperties: false
+              required:
+                - projectId
+                - schemaId
+                - changeset
+              additionalProperties: false
+        required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetSchemaResponse"
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /createSchema:
+    post:
+      operationId: create-schema
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                jsonSchema: {}
+                name:
+                  type: string
+                projectId:
+                  type: string
+              required:
+                - jsonSchema
+                - name
+                - projectId
+              additionalProperties: false
+        required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetSchemaResponse"
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /deleteDocument:
+    delete:
+      operationId: delete-document
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: projectId
+          required: true
+        - schema:
+            type: string
+          in: query
+          name: documentId
+          required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: boolean
+                required:
+                  - deleted
+                additionalProperties: false
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /getCurrentProject:
+    get:
+      operationId: get-current-project
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: projectId
+          required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  createdAt:
+                    type: string
+                    format: date-time
+                  createdBy:
+                    type: string
+                  balances:
+                    type: object
+                    additionalProperties:
+                      type: number
+                  billing:
+                    type: object
+                    properties:
+                      isActive:
+                        type: boolean
+                      planName:
+                        type: string
+                        nullable: true
+                      isInTrial:
+                        type: boolean
+                    required:
+                      - isActive
+                      - isInTrial
+                    additionalProperties: false
+                required:
+                  - id
+                  - name
+                  - createdAt
+                  - createdBy
+                  - balances
+                  - billing
+                additionalProperties: false
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /listWebhookConfigurations:
+    get:
+      operationId: list-webhook-configurations
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: projectId
+          required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WebhookConfiguration"
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /updateWebhookConfiguration:
+    patch:
+      operationId: update-webhook-configuration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projectId:
+                  type: string
+                webhookConfigurationId:
+                  type: string
+                changeset:
+                  type: object
+                  properties:
+                    method:
+                      type: string
+                      enum:
+                        - POST
+                        - PUT
+                    url:
+                      type: string
+                      format: uri
+                    headers:
+                      type: object
+                      additionalProperties:
+                        type: string
+                    enabled:
+                      type: boolean
+                    rules:
+                      type: string
+                  additionalProperties: false
+              required:
+                - projectId
+                - webhookConfigurationId
+                - changeset
+              additionalProperties: false
+        required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebhookConfiguration"
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /createWebhookConfiguration:
+    post:
+      operationId: create-webhook-configuration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projectId:
+                  type: string
+                method:
+                  type: string
+                  enum:
+                    - POST
+                    - PUT
+                url:
+                  type: string
+                  format: uri
+                headers:
+                  type: object
+                  additionalProperties:
+                    type: string
+                enabled:
+                  type: boolean
+                rules:
+                  type: string
+              required:
+                - projectId
+                - method
+                - url
+                - enabled
+              additionalProperties: false
+        required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebhookConfiguration"
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /getWebhookConfiguration:
+    get:
+      operationId: get-webhook-configuration
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: projectId
+          required: true
+        - schema:
+            type: string
+          in: query
+          name: webhookConfigurationId
+          required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebhookConfiguration"
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /getMemberInfo:
+    get:
+      operationId: get-member-info
+      parameters:
+        - schema:
+            type: string
+            minLength: 1
+          in: query
+          name: projectId
+          required: true
+        - schema:
+            type: string
+            minLength: 1
+          in: query
+          name: userId
+          required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BasicUserInfo"
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /getLedgerBalances:
+    get:
+      operationId: get-ledger-balances
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: projectId
+          required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: number
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /searchLedgerTransactions:
+    get:
+      operationId: search-ledger-transactions
+      parameters:
+        - schema:
+            type: string
+            minLength: 1
+          in: query
+          name: projectId
+          required: true
+        - schema:
+            type: string
+            format: date-time
+          in: query
+          name: from
+          required: true
+        - schema:
+            type: string
+            format: date-time
+          in: query
+          name: to
+          required: true
+        - schema:
+            type: array
+            items:
+              type: string
+          in: query
+          name: ids
+          required: false
+        - schema:
+            type: array
+            items:
+              type: string
+          in: query
+          name: currency
+          required: false
+        - schema:
+            type: integer
+            exclusiveMinimum: true
+            minimum: 0
+          in: query
+          name: limit
+          required: true
+        - schema:
+            type: integer
+          in: query
+          name: offset
+          required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: number
+                  transactions:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/LedgerTransaction"
+                required:
+                  - total
+                  - transactions
+                additionalProperties: false
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /createCheckoutSession:
+    post:
+      operationId: create-checkout-session
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projectId:
+                  type: string
+                planName:
+                  type: string
+                  enum:
+                    - s
+                    - m
+                    - l
+                    - xl
+                billingCycle:
+                  type: string
+                  enum:
+                    - monthly
+                    - yearly
+              required:
+                - projectId
+                - planName
+                - billingCycle
+              additionalProperties: false
+        required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  checkoutUrl:
+                    type: string
+                    format: uri
+                required:
+                  - checkoutUrl
+                additionalProperties: false
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+  /handleStripeWebhook:
+    post:
+      operationId: create-checkout-session
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+      parameters:
+        - schema:
+            type: string
+            minLength: 1
+          in: header
+          name: stripe-signature
+          required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema: {}
+  /getStripeCustomerPortal:
+    get:
+      operationId: get-stripe-customer-portal
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: projectId
+          required: true
+        - schema:
+            type: string
+            enum:
+              - cancel
+              - update
+          in: query
+          name: flow
+          required: true
+      security:
+        - JWT: []
+        - APIKey: []
+      responses:
+        "200":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  customerPortalUrl:
+                    type: string
+                    format: uri
+                required:
+                  - customerPortalUrl
+                additionalProperties: false
+        "400":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidatorError"
+        "401":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+        "500":
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+servers:
+  - url: https://api.structuredparser.com
+    description: Production server
+  - url: http://localhost:4949
+    description: Development server
+tags: []
+externalDocs:
+  url: https://swagger.io
+  description: Find more info here
