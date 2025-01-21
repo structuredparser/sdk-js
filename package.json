@@ -39,6 +39,11 @@
     "rollup": "^4.31.0"
   },
   "files": [
-    "/dist"
+    "dist/**/**",
+    "!**/*.test.*",
+    "!**/*.spec.*",
+    "!**/*.tsbuildinfo",
+    "LICENSE",
+    "README.md"
   ]
 }
