@@ -1,6 +1,6 @@
 {
   "name": "@structuredparser/sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "The Structured Parser JS/TS SDK allows developers to easily integrate Structured Parser's advanced structured data extraction capabilities from unstructured documents such as PDF, DOCX, XLSX.",
   "homepage": "https://structuredparser.com",
