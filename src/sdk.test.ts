@@ -4,13 +4,13 @@ import { Ledger } from "./ledger";
 import { Documents } from "./documents";
 import { Start } from "./start";
 
-describe("Instanciate StructuredParser", () => {
+describe("Instantiate StructuredParser", () => {
 
   test("with valid options", () => {
     expect(() => new StructuredParser({ apiKey: "my-api-key" })).toBeDefined()
   })
 
-  test("modules are properly defined and instanciated", () => {
+  test("modules are properly defined and instantiated", () => {
     const parser = new StructuredParser({ apiKey: "my-api-key" })
     expect(parser.ledger).toBeInstanceOf(Ledger)
     expect(parser.documents).toBeInstanceOf(Documents)
